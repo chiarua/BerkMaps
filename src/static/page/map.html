@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="https://use.fontawesome.com/c0977efc4f.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+  <link rel="stylesheet" href="styles/map.css">
+  <title>BearMaps</title>
+</head>
+<body>
+  <div class="map-container">
+    <div id="mapbody"><img id="map"></div>
+  </div>
+
+  <img id="dest" src="marker.gif">
+  <div id="markers"></div>
+  <div class="actions">
+    <div class="widget card">
+      <div class="card-content">
+        <span class="search-container">
+          <label for="tags"></label>
+          <input class="search" id="tags" placeholder="Search locations">
+        </span>
+        <span class="icons-container">
+          <a class="zoomin"><i class="action-icon fa fa-2x fa-search-plus" aria-hidden="true"></i></a>
+          <a class="zoomout"><i class="action-icon fa fa-2x fa-search-minus" aria-hidden="true"></i></a>
+          <a class="info">
+            <i class="action-icon fa fa-2x fa-question-circle" aria-hidden="true"></i>
+            <div class="info-text">
+              You can also use arrow keys and -/= to zoom, or use the mouse drag and scroll wheel.
+              Double click to begin routing & double click again to end and show route.
+              <div class="info-subtext">( click this bubble to close )</div>
+            </div>
+          </a>
+          <a class="settings-container">
+            <i class="action-icon fa fa-2x fa-cog" aria-hidden="true"></i>
+            <div class="settings">
+              <i class="close-settings fa fa-times-circle-o" aria-hidden="true"></i>
+              <div class="settings-title"><strong>Options</strong></div>
+              <form class="options" action="">
+                <label class="options-label">
+                  <input id="constrain-input" type="checkbox" name="constrain"><span>Constrain map dimensions (this may solve problems with zooming out)</span>
+                </label><br>
+                <div class="settings-title"><strong>Theme:</strong></div>
+                <label class="options-label">
+                  <input type="radio" name="theme" value="default"><span>Default</span>
+                </label><br>
+                <label class="options-label">
+                  <input type="radio" name="theme" value="cal"><span>Cal</span>
+                </label><br>
+                <label class="options-label">
+                  <input type="radio" name="theme" value="solarized"><span>Solarized Light</span>
+                </label><br>
+                <label class="options-label">
+                  <input type="radio" name="theme" value="eighties"><span>Eighties</span>
+                </label>
+              </form>
+            </div>
+          </a>
+        </span>
+      </div>
+    </div>
+    <div>
+      <a class="clear waves-effect btn">clear route</a>
+      <div class="status">
+          <div id="status-route" class="card">
+            <div class="card-content">
+              Double-click again <br> for route endpoint ...
+            </div>
+          </div>
+          <div id="status-loading" class="card">
+            <div class="card-content">
+              <div class="loader-text">Rastering</div>
+              <div class="loader">Loading...</div>
+            </div>
+          </div>
+          <div id="status-error" class="card">
+            <div class="card-content">
+              Got server-side error! <br> See Java Console
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="directions">
+    <div class="card">
+      <div class="card-content">
+        <span class="directions-container">
+          <i class="action-icon fa fa-2x fa-map-signs" aria-hidden="true"></i>
+          <div class="directions-window">
+            <i class="close-directions fa fa-2x fa-times-circle-o" aria-hidden="true"></i>
+            <div class="directions-title"><strong>Route Navigation Directions</strong></div>
+            <div class="directions-text" id="directions-text">No routing directions to display.</div>
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 地点详情栏 -->
+  <div class="location-details">
+    <div class="card">
+      <div class="card-content">
+        <span class="location-details-container">
+          <i class="action-icon fa fa-2x fa-info-circle" aria-hidden="true"></i>
+          <div class="location-details-window">
+            <i class="close-location-details fa fa-times-circle-o" aria-hidden="true"></i>
+            <div class="location-title"><strong>Location Details</strong></div>
+            <div class="location-name" id="location-name">No location selected</div>
+            <div class="comments-section">
+              <h4>Comments</h4>
+              <div class="comments-list" id="comments-list">
+                <!-- 评论将在这里动态添加 -->
+                <div class="no-comments">No comments yet</div>
+              </div>
+              <div class="comment-form">
+                <textarea id="comment-text" placeholder="Add your comment" class="comment-input"></textarea>
+                <button id="submit-comment" class="btn">Submit</button>
+                <div id="comment-login-notice" class="login-notice" style="display: none;">Please login to comment</div>
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 用户登录按钮 -->
+  <div id="user-login-container" style="position: fixed; bottom: 20px; left: 20px; z-index: 1000;">
+    <button id="login-button" class="btn">登录</button>
+  </div>
+
+  <!-- 登录模态框 -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <span class="close-modal">&times;</span>
+        <h3>用户登录</h3>
+      </div>
+      <div class="modal-body">
+        <div id="login-error" class="error-message"></div>
+        <div class="login-form">
+          <input type="text" id="login-username" placeholder="用户名" class="login-input">
+          <input type="password" id="login-password" placeholder="密码" class="login-input">
+          <div class="button-group">
+            <button id="submit-login" class="btn">登录</button>
+            <button id="submit-register" class="btn btn-register">注册</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="scripts/map.js"></script>
+</body>
+</html>
