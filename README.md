@@ -20,6 +20,7 @@
 ![Demo](https://github.com/chiarua/BerkMaps/blob/master/demo/AddComment.gif)<br>
   
 * 用户评分及均分计算<br>
-
+![Demo](https://github.com/chiarua/BerkMaps/blob/master/demo/Rating.gif)<br>
 
 * 管理员用户修改地点详情<br>
+![Demo](https://github.com/chiarua/BerkMaps/blob/master/demo/addDescription.gif)<br>
