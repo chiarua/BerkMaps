@@ -17,5 +17,9 @@
 ![Demo](https://github.com/chiarua/BerkMaps/blob/master/demo/logIn.gif)<br>
   
 * 地点详情及评论<br>
-![Demo](https://github.com/chiarua/BerkMaps/blob/master/demo/AddComment.gif)
+![Demo](https://github.com/chiarua/BerkMaps/blob/master/demo/AddComment.gif)<br>
   
+* 用户评分及均分计算<br>
+
+
+* 管理员用户修改地点详情<br>
